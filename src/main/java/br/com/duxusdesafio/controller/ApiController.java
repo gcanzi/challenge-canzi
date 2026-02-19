@@ -173,8 +173,24 @@ public class ApiController {
     
     // Endpoint para receber o cadastro via formulário HTML
     @PostMapping(value = "/integrante", consumes = "application/x-www-form-urlencoded")
-    public String cadastrarIntegranteForm(Integrante integrante) {
+    public org.springframework.web.servlet.ModelAndView cadastrarIntegranteForm(Integrante integrante) {
         integranteRepository.save(integrante);
-        return "redirect:/integrantes?sucesso";
+  
+        return new org.springframework.web.servlet.ModelAndView("redirect:/integrantes?sucesso");
+    }
+    
+    // Endpoint para receber a montagem do time via formulário HTML
+    @PostMapping(value = "/time", consumes = "application/x-www-form-urlencoded")
+    public org.springframework.web.servlet.ModelAndView cadastrarTimeForm(@RequestParam String data, @RequestParam List<Long> integrantesIds) {
+        Time novoTime = new Time();
+        novoTime.setData(LocalDate.parse(data));
+        Time timeSalvo = timeRepository.save(novoTime);
+        
+        for (Long id : integrantesIds) {
+            integranteRepository.findById(id).ifPresent(integ -> {
+                composicaoTimeRepository.save(new ComposicaoTime(timeSalvo, integ));
+            });
+        }
+        return new org.springframework.web.servlet.ModelAndView("redirect:/montar-time?sucesso");
     }
 }
