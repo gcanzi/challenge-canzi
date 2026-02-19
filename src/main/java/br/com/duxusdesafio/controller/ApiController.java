@@ -170,4 +170,11 @@ public class ApiController {
         Map<String, Long> contagem = apiService.contagemPorFuncao(dataInicial, dataFinal, todosOsTimes);
         return ResponseEntity.ok(contagem);
     }
+    
+    // Endpoint para receber o cadastro via formulário HTML
+    @PostMapping(value = "/integrante", consumes = "application/x-www-form-urlencoded")
+    public String cadastrarIntegranteForm(Integrante integrante) {
+        integranteRepository.save(integrante);
+        return "redirect:/integrantes?sucesso";
+    }
 }

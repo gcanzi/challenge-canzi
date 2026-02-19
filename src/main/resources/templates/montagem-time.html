@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Montagem de Time</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h2>Montar Novo Time</h2>
+    <form th:action="@{/api/time}" method="post">
+        <label>Data do Time:</label><br>
+        <input type="date" name="data" required><br><br>
+
+        <h3>Selecione os Integrantes:</h3>
+        <div th:each="integ : ${todosIntegrantes}">
+            <input type="checkbox" name="integrantesIds" th:value="${integ.id}" />
+            <span th:text="${integ.nome} + ' (' + ${integ.funcao} + ')' "></span>
+        </div>
+        <br>
+        <button type="submit">Salvar Time</button>
+    </form>
+    <br>
+    <a href="/integrantes">Voltar para Cadastro</a>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cadastro de Integrantes</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h2>Inserir Novo Integrante</h2>
+    <form th:action="@{/api/integrante}" method="post">
+        <label>Nome:</label><br>
+        <input type="text" name="nome" required><br><br>
+        
+        <label>Franquia:</label><br>
+        <input type="text" name="franquia" required><br><br>
+        
+        <label>Função:</label><br>
+        <input type="text" name="funcao" required><br><br>
+        
+        <button type="submit">Cadastrar Integrante</button>
+    </form>
+    <br>
+    <a href="/montar-time">Ir para Montagem de Time</a>
+</body>
+</html>
