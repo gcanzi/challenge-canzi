@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,9 +30,16 @@ public class ApiService {
      * Vai retornar o integrante que estiver presente na maior quantidade de times
      * dentro do período
      */
-    public Integrante integranteMaisUsado(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){
-        // TODO Implementar método seguindo as instruções!
-        return null;
+	public Integrante integranteMaisUsado(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){
+        // Essa função percorre os times do período e encontra a pessoa que mais foi escalada.
+        List<Time> filtrados = filtrarPorData(dataInicial, dataFinal, todosOsTimes);
+        return filtrados.stream()
+                .flatMap(time -> time.getComposicaoTime().stream())
+                .map(ComposicaoTime::getIntegrante)
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey).orElse(null);
     }
 
     /**
@@ -47,18 +55,31 @@ public class ApiService {
      * Vai retornar a função mais comum nos times dentro do período
      */
     public String funcaoMaisComum(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){
-        // TODO Implementar método seguindo as instruções!
-        return null;
+        // Analisa o cargo de cada um para dizer qual deles apareceu mais vezes.
+        List<Time> filtrados = filtrarPorData(dataInicial, dataFinal, todosOsTimes);
+        return filtrados.stream()
+                .flatMap(time -> time.getComposicaoTime().stream())
+                .map(ct -> ct.getIntegrante().getFuncao())
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey).orElse(null);
     }
 
     /**
      * Vai retornar o nome da Franquia mais comum nos times dentro do período
      */
     public String franquiaMaisFamosa(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes) {
-        // TODO Implementar método seguindo as instruções!
-        return null;
+        // Serve para descobrir qual franquia teve mais representantes nos times escolhidos.
+        List<Time> filtrados = filtrarPorData(dataInicial, dataFinal, todosOsTimes);
+        return filtrados.stream()
+                .flatMap(time -> time.getComposicaoTime().stream())
+                .map(ct -> ct.getIntegrante().getFranquia())
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey).orElse(null);
     }
-
 
     /**
      * Vai retornar o número (quantidade) de Franquias dentro do período
