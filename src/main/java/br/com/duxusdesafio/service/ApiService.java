@@ -19,6 +19,9 @@ public class ApiService {
      * Vai retornar um Time, com a composição do time daquela data
      */
 	public Time timeDaData(LocalDate data, List<Time> todosOsTimes){
+		// Blindagem contra null pointer
+        if (todosOsTimes == null || todosOsTimes.isEmpty()) return null;
+        
 		// Utilizei Java Streams para filtrar a lista e encontrar o primeiro time correspondente à data informada.
         return todosOsTimes.stream()
                 .filter(time -> time.getData().equals(data))
@@ -130,6 +133,9 @@ public class ApiService {
      * Ele garante que a gente só olhe para os times que estão dentro do período que o usuário escolheu.
      */
     private List<Time> filtrarPorData(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes) {
+    	// Blindagem: se a lista for nula ou vazia, devolvemos uma lista vazia segura
+        if (todosOsTimes == null || todosOsTimes.isEmpty()) return Collections.emptyList();
+    	
         return todosOsTimes.stream()
                 .filter(time -> {
                     LocalDate data = time.getData();
